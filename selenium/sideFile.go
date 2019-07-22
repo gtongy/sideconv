@@ -1,5 +1,7 @@
 package selenium
 
+import "strings"
+
 type SideFile struct {
 	ID      string `json:"id"`
 	Version string `json:"version"`
@@ -26,10 +28,28 @@ type Test struct {
 }
 
 type Command struct {
-	ID      string        `json:"id"`
-	Comment string        `json:"comment"`
-	Command string        `json:"command"`
-	Target  string        `json:"target"`
-	Targets []interface{} `json:"targets"`
-	Value   string        `json:"value"`
+	ID      string     `json:"id"`
+	Comment string     `json:"comment"`
+	Command string     `json:"command"`
+	Target  string     `json:"target"`
+	Targets [][]string `json:"targets"`
+	Value   string     `json:"value"`
+}
+
+func (c *Command) GetIdRelative() string {
+	for _, target := range c.Targets {
+		if target[1] == "xpath:idRelative" {
+			return target[0]
+		}
+	}
+	return ""
+}
+
+func (c *Command) GetTargetXpathKey(xpaths Xpaths) string {
+	for key := range xpaths {
+		if strings.Index(c.Target, key) != -1 {
+			return key
+		}
+	}
+	return ""
 }
