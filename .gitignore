@@ -1,2 +1,3 @@
 outputs/*.side
 sides/*.side
+convert-settings/*.yml
