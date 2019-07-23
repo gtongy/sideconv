@@ -66,3 +66,21 @@ func (c *Command) GetValueFileKey(files setting.Files) string {
 	}
 	return ""
 }
+
+func (c *Command) GetTargetTextKey(texts setting.Texts) string {
+	for key := range texts {
+		if strings.Index(c.Target, key) != -1 {
+			return key
+		}
+	}
+	return ""
+}
+
+func (c *Command) GetValueTextKey(texts setting.Texts) string {
+	for key := range texts {
+		if strings.Index(c.Value, key) != -1 {
+			return key
+		}
+	}
+	return ""
+}

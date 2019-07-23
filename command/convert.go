@@ -41,14 +41,17 @@ func convertExec(filePath string) {
 	json.Unmarshal(raw, &uploadSideFile)
 	xpathConverter := converter.NewXpath(uploadSideFile)
 	fileConverter := converter.NewFile(uploadSideFile)
+	textConverter := converter.NewText(uploadSideFile)
 	for testKey, test := range uploadSideFile.Tests {
 		for commandKey, command := range test.Commands {
 			xpathConverter.Exec(testKey, commandKey, command)
 			fileConverter.Exec(testKey, commandKey, command)
+			textConverter.Exec(testKey, commandKey, command)
 		}
 	}
 	xpathConverter.After()
 	fileConverter.After()
+	textConverter.After()
 	uploadSideFileBytes, err := json.Marshal(uploadSideFile)
 	sideconvError.HandleError(err)
 	outPutFile(filePath, uploadSideFileBytes)
