@@ -17,7 +17,7 @@ func main() {
 			Aliases: []string{"c"},
 			Usage:   "convert exec",
 			Action: func(c *cli.Context) error {
-				command.ConvertExec(c)
+				command.Convert(c)
 				return nil
 			},
 		},

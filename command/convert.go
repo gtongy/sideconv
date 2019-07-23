@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/gtongy/sideconv/selenium"
@@ -14,12 +15,29 @@ import (
 )
 
 const (
-	XPATH_SETTINGS_FILE_PATH = "./convert-settings/xpaths.yml"
+	XPATH_SETTINGS_FILE_PATH = "convert-settings/xpaths.yml"
+	SIDE_DIR                 = "sides/"
+	OUTPUTS_DIR              = "outputs/"
+	PERMMISION_ALL_ALLOW     = 0777
 )
 
-func ConvertExec(c *cli.Context) {
+func Convert(c *cli.Context) {
+	filepath.Walk(SIDE_DIR, walkSideFilePaths)
+}
+
+func walkSideFilePaths(sidesPath string, info os.FileInfo, err error) error {
+	handleError(err)
+	if info.IsDir() {
+		return nil
+	}
+	path := strings.Replace(sidesPath, SIDE_DIR, "", 1)
+	convertExec(path)
+	return nil
+}
+
+func convertExec(filePath string) {
 	var uploadSideFile selenium.SideFile
-	raw, err := ioutil.ReadFile("./sides/uploadReserve.side")
+	raw, err := ioutil.ReadFile(SIDE_DIR + filePath)
 	json.Unmarshal(raw, &uploadSideFile)
 	xpathSetting := setting.NewXpathSetting()
 	xpathSettingRaw, err := ioutil.ReadFile(XPATH_SETTINGS_FILE_PATH)
@@ -43,10 +61,16 @@ func ConvertExec(c *cli.Context) {
 	}
 	componentYmlFileBytes, err := yaml.Marshal(&xpathSetting)
 	handleError(err)
-	ioutil.WriteFile(XPATH_SETTINGS_FILE_PATH, componentYmlFileBytes, 0664)
+	ioutil.WriteFile(XPATH_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
 	uploadSideFileBytes, err := json.Marshal(uploadSideFile)
 	handleError(err)
-	ioutil.WriteFile("outputs/uploadReserve.side", uploadSideFileBytes, 0664)
+	outputFilePath := OUTPUTS_DIR + filePath
+	outputDir := filepath.Dir(outputFilePath)
+	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+		os.Mkdir(outputDir, PERMMISION_ALL_ALLOW)
+	}
+	ioutil.WriteFile(outputFilePath, uploadSideFileBytes, PERMMISION_ALL_ALLOW)
+	handleError(err)
 }
 
 func handleError(err error) {
