@@ -57,3 +57,12 @@ func (c *Command) GetTargetXpathKey(xpaths setting.Xpaths) string {
 	}
 	return ""
 }
+
+func (c *Command) GetValueFileKey(files setting.Files) string {
+	for key := range files {
+		if strings.Index(c.Value, key) != -1 {
+			return key
+		}
+	}
+	return ""
+}

@@ -1,3 +1,4 @@
 outputs/**/*.side
 sides/**/*.side
+files/**/*.*
 convert-settings/*.yml
