@@ -1,4 +1,4 @@
-module bitbucket.org/hameesys/sideconv
+module github.com/gtongy/sideconv
 
 go 1.12
 

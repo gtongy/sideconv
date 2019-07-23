@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"bitbucket.org/hameesys/sideconv/command"
+	"github.com/gtongy/sideconv/command"
 	"github.com/urfave/cli"
 )
 

@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"bitbucket.org/hameesys/sideconv/selenium"
-	"bitbucket.org/hameesys/sideconv/setting"
+	"github.com/gtongy/sideconv/selenium"
+	"github.com/gtongy/sideconv/setting"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 )

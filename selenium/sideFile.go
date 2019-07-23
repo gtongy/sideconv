@@ -3,7 +3,7 @@ package selenium
 import (
 	"strings"
 
-	"bitbucket.org/hameesys/sideconv/setting"
+	"github.com/gtongy/sideconv/setting"
 )
 
 type SideFile struct {
