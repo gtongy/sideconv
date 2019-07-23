@@ -10,4 +10,17 @@ func NewXpathSetting() XpathSetting {
 	}
 }
 
+func (xs *XpathSetting) GetTemplate(key string) string {
+	return "{xpath:" + key + "}"
+}
+
+func (xs *XpathSetting) IsAlreadyExists(val string) bool {
+	for _, xpath := range xs.Xpaths {
+		if xpath == val {
+			return true
+		}
+	}
+	return false
+}
+
 type Xpaths map[string]string
