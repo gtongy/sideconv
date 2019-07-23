@@ -15,13 +15,13 @@ import (
 
 const (
 	XPATH_SETTINGS_FILE_PATH = "convert-settings/xpaths.yml"
-	SIDE_DIR                 = "sides/"
+	INPUTS_DIR               = "inputs/"
 	OUTPUTS_DIR              = "outputs/"
 	PERMMISION_ALL_ALLOW     = 0777
 )
 
 func Convert(c *cli.Context) {
-	filepath.Walk(SIDE_DIR, walkSideFilePaths)
+	filepath.Walk(INPUTS_DIR, walkSideFilePaths)
 }
 
 func walkSideFilePaths(sidesPath string, info os.FileInfo, err error) error {
@@ -29,14 +29,14 @@ func walkSideFilePaths(sidesPath string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	path := strings.Replace(sidesPath, SIDE_DIR, "", 1)
+	path := strings.Replace(sidesPath, INPUTS_DIR, "", 1)
 	convertExec(path)
 	return nil
 }
 
 func convertExec(filePath string) {
 	var uploadSideFile *selenium.SideFile
-	raw, err := ioutil.ReadFile(SIDE_DIR + filePath)
+	raw, err := ioutil.ReadFile(INPUTS_DIR + filePath)
 	sideconvError.HandleError(err)
 	json.Unmarshal(raw, &uploadSideFile)
 	xpathConverter := converter.NewXpath(uploadSideFile)
