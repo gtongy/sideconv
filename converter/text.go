@@ -43,5 +43,5 @@ func (t *Text) Exec(testKey int, commandKey int, command selenium.Command) {
 
 func (t *Text) After() {
 	componentYmlFileBytes, _ := yaml.Marshal(&t.textSetting)
-	ioutil.WriteFile(FILE_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
+	ioutil.WriteFile(TEXT_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
 }
