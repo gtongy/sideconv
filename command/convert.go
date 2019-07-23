@@ -2,12 +2,12 @@ package command
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
+	sideconvError "github.com/gtongy/sideconv/error"
 	"github.com/gtongy/sideconv/selenium"
 	"github.com/gtongy/sideconv/setting"
 	"github.com/urfave/cli"
@@ -26,7 +26,7 @@ func Convert(c *cli.Context) {
 }
 
 func walkSideFilePaths(sidesPath string, info os.FileInfo, err error) error {
-	handleError(err)
+	sideconvError.HandleError(err)
 	if info.IsDir() {
 		return nil
 	}
@@ -41,7 +41,7 @@ func convertExec(filePath string) {
 	json.Unmarshal(raw, &uploadSideFile)
 	xpathSetting := setting.NewXpathSetting()
 	xpathSettingRaw, err := ioutil.ReadFile(XPATH_SETTINGS_FILE_PATH)
-	handleError(err)
+	sideconvError.HandleError(err)
 	yaml.Unmarshal(xpathSettingRaw, &xpathSetting)
 	for testKey, test := range uploadSideFile.Tests {
 		for commandKey, command := range test.Commands {
@@ -60,22 +60,15 @@ func convertExec(filePath string) {
 		}
 	}
 	componentYmlFileBytes, err := yaml.Marshal(&xpathSetting)
-	handleError(err)
+	sideconvError.HandleError(err)
 	ioutil.WriteFile(XPATH_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
 	uploadSideFileBytes, err := json.Marshal(uploadSideFile)
-	handleError(err)
+	sideconvError.HandleError(err)
 	outputFilePath := OUTPUTS_DIR + filePath
 	outputDir := filepath.Dir(outputFilePath)
 	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
 		os.Mkdir(outputDir, PERMMISION_ALL_ALLOW)
 	}
 	ioutil.WriteFile(outputFilePath, uploadSideFileBytes, PERMMISION_ALL_ALLOW)
-	handleError(err)
-}
-
-func handleError(err error) {
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
+	sideconvError.HandleError(err)
 }

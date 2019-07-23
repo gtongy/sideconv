@@ -13,6 +13,15 @@ func main() {
 	app.Usage = "selenium IDE .side file converter"
 	app.Commands = []cli.Command{
 		{
+			Name:    "create-app",
+			Aliases: []string{"ca"},
+			Usage:   "this command create app",
+			Action: func(c *cli.Context) error {
+				command.CreateApp(c)
+				return nil
+			},
+		},
+		{
 			Name:    "convert",
 			Aliases: []string{"c"},
 			Usage:   "convert exec",
