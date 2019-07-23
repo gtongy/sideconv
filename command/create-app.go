@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	setupDirectorys = []string{"/convert-settings", "/outputs", "/sides"}
-	setupFilePaths  = []string{"/convert-settings/xpaths.yml"}
+	setupDirectorys = []string{"/convert-settings", "/outputs", "/sides", "/files"}
+	setupFilePaths  = []string{"/convert-settings/xpath.yml", "/convert-settings/file.yml", "/convert-settings/text.yml"}
 )
 
 func CreateApp(c *cli.Context) {

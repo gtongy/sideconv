@@ -7,11 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gtongy/sideconv/converter"
 	sideconvError "github.com/gtongy/sideconv/error"
 	"github.com/gtongy/sideconv/selenium"
-	"github.com/gtongy/sideconv/setting"
 	"github.com/urfave/cli"
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -36,39 +35,26 @@ func walkSideFilePaths(sidesPath string, info os.FileInfo, err error) error {
 }
 
 func convertExec(filePath string) {
-	var uploadSideFile selenium.SideFile
+	var uploadSideFile *selenium.SideFile
 	raw, err := ioutil.ReadFile(SIDE_DIR + filePath)
-	json.Unmarshal(raw, &uploadSideFile)
-	xpathSetting := setting.NewXpathSetting()
-	xpathSettingRaw, err := ioutil.ReadFile(XPATH_SETTINGS_FILE_PATH)
 	sideconvError.HandleError(err)
-	yaml.Unmarshal(xpathSettingRaw, &xpathSetting)
+	json.Unmarshal(raw, &uploadSideFile)
+	xpathConverter := converter.NewXpath(uploadSideFile)
 	for testKey, test := range uploadSideFile.Tests {
 		for commandKey, command := range test.Commands {
-			xpathKey := command.GetTargetXpathKey(xpathSetting.Xpaths)
-			if xpathKey != "" {
-				uploadSideFile.Tests[testKey].Commands[commandKey].Target = strings.Replace(command.Target, xpathSetting.GetTemplate(xpathKey), xpathSetting.Xpaths[xpathKey], -1)
-			}
-			if _, ok := xpathSetting.Xpaths[command.ID]; ok {
-				continue
-			}
-			idRelative := command.GetIdRelative()
-			if idRelative == "" || xpathSetting.IsAlreadyExists(idRelative) {
-				continue
-			}
-			xpathSetting.Xpaths[command.ID] = idRelative
+			xpathConverter.Exec(testKey, commandKey, command)
 		}
 	}
-	componentYmlFileBytes, err := yaml.Marshal(&xpathSetting)
-	sideconvError.HandleError(err)
-	ioutil.WriteFile(XPATH_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
 	uploadSideFileBytes, err := json.Marshal(uploadSideFile)
 	sideconvError.HandleError(err)
+	outPutFile(filePath, uploadSideFileBytes)
+}
+
+func outPutFile(filePath string, uploadSideFileBytes []byte) {
 	outputFilePath := OUTPUTS_DIR + filePath
 	outputDir := filepath.Dir(outputFilePath)
 	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
 		os.Mkdir(outputDir, PERMMISION_ALL_ALLOW)
 	}
 	ioutil.WriteFile(outputFilePath, uploadSideFileBytes, PERMMISION_ALL_ALLOW)
-	sideconvError.HandleError(err)
 }
