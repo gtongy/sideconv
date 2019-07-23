@@ -1,6 +1,10 @@
 package selenium
 
-import "strings"
+import (
+	"strings"
+
+	"bitbucket.org/hameesys/sideconv/setting"
+)
 
 type SideFile struct {
 	ID      string `json:"id"`
@@ -45,7 +49,7 @@ func (c *Command) GetIdRelative() string {
 	return ""
 }
 
-func (c *Command) GetTargetXpathKey(xpaths Xpaths) string {
+func (c *Command) GetTargetXpathKey(xpaths setting.Xpaths) string {
 	for key := range xpaths {
 		if strings.Index(c.Target, key) != -1 {
 			return key

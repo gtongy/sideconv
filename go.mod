@@ -1,5 +1,8 @@
-module bitbucket.org/hameesys/sidegen
+module bitbucket.org/hameesys/sideconv
 
 go 1.12
 
-require gopkg.in/yaml.v2 v2.2.2
+require (
+	github.com/urfave/cli v1.20.0
+	gopkg.in/yaml.v2 v2.2.2
+)
