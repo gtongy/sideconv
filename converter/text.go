@@ -10,17 +10,19 @@ import (
 )
 
 const (
-	TEXT_SETTINGS_FILE_PATH = "convert-settings/text.yml"
+	textSettingsFilePath = "convert-settings/text.yml"
 )
 
+// Text 変換を行うテキストの構造体
 type Text struct {
 	uploadSideFile *selenium.SideFile
 	textSetting    *setting.TextSetting
 }
 
+// NewText 変換を行うテキストの構造体の初期化
 func NewText(uploadSideFile *selenium.SideFile) Text {
 	textSetting := setting.NewTextSetting()
-	textSettingRaw, _ := ioutil.ReadFile(TEXT_SETTINGS_FILE_PATH)
+	textSettingRaw, _ := ioutil.ReadFile(textSettingsFilePath)
 	yaml.Unmarshal(textSettingRaw, &textSetting)
 	return Text{
 		uploadSideFile: uploadSideFile,
@@ -28,6 +30,7 @@ func NewText(uploadSideFile *selenium.SideFile) Text {
 	}
 }
 
+// Exec 処理の実行
 func (t *Text) Exec(testKey int, commandKey int, command selenium.Command) {
 	textValueKey := command.GetValueFileKey(t.textSetting.Texts)
 	if textValueKey != "" {
@@ -41,7 +44,8 @@ func (t *Text) Exec(testKey int, commandKey int, command selenium.Command) {
 	}
 }
 
+// After 実行後処理の記述
 func (t *Text) After() {
 	componentYmlFileBytes, _ := yaml.Marshal(&t.textSetting)
-	ioutil.WriteFile(TEXT_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
+	ioutil.WriteFile(textSettingsFilePath, componentYmlFileBytes, 0777)
 }

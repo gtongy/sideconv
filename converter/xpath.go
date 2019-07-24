@@ -10,18 +10,19 @@ import (
 )
 
 const (
-	XPATH_SETTINGS_FILE_PATH = "convert-settings/xpath.yml"
-	PERMMISION_ALL_ALLOW     = 0777
+	xpathSettingsFilePath = "convert-settings/xpath.yml"
 )
 
+// Xpath 変換を行うXpathの構造体
 type Xpath struct {
 	uploadSideFile *selenium.SideFile
 	xpathSetting   *setting.XpathSetting
 }
 
+// NewXpath 変換を行うXpathの構造体の初期化
 func NewXpath(uploadSideFile *selenium.SideFile) Xpath {
 	xpathSetting := setting.NewXpathSetting()
-	xpathSettingRaw, _ := ioutil.ReadFile(XPATH_SETTINGS_FILE_PATH)
+	xpathSettingRaw, _ := ioutil.ReadFile(xpathSettingsFilePath)
 	yaml.Unmarshal(xpathSettingRaw, &xpathSetting)
 	return Xpath{
 		uploadSideFile: uploadSideFile,
@@ -29,6 +30,7 @@ func NewXpath(uploadSideFile *selenium.SideFile) Xpath {
 	}
 }
 
+// Exec 処理の実行
 func (xp *Xpath) Exec(testKey int, commandKey int, command selenium.Command) {
 	xpathKey := command.GetTargetXpathKey(xp.xpathSetting.Xpaths)
 	if xpathKey != "" {
@@ -45,7 +47,8 @@ func (xp *Xpath) Exec(testKey int, commandKey int, command selenium.Command) {
 	xp.xpathSetting.Xpaths[command.ID] = idRelative
 }
 
+// After 実行後処理の記述
 func (xp *Xpath) After() {
 	componentYmlFileBytes, _ := yaml.Marshal(&xp.xpathSetting)
-	ioutil.WriteFile(XPATH_SETTINGS_FILE_PATH, componentYmlFileBytes, PERMMISION_ALL_ALLOW)
+	ioutil.WriteFile(xpathSettingsFilePath, componentYmlFileBytes, 0777)
 }
