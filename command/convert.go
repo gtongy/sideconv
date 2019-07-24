@@ -2,6 +2,7 @@ package command
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -21,6 +22,7 @@ const (
 // Convert 変換処理の実行
 func Convert(c *cli.Context) {
 	filepath.Walk(inputsDirPath, walkSideFilePaths)
+	fmt.Println("変換完了")
 }
 
 // walkSideFilePaths 変換を行うファイルのパスの走査
@@ -30,6 +32,10 @@ func walkSideFilePaths(sidesPath string, info os.FileInfo, err error) error {
 		return nil
 	}
 	path := strings.Replace(sidesPath, inputsDirPath, "", 1)
+	if filepath.Ext(path) != ".side" {
+		fmt.Printf("%s はsideファイルではないためスキップします\n", path)
+		return nil
+	}
 	convertExec(path)
 	return nil
 }
