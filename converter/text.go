@@ -31,16 +31,22 @@ func NewText(uploadSideFile *selenium.SideFile) Text {
 }
 
 // Exec 処理の実行
-func (t *Text) Exec(testKey int, commandKey int, command selenium.Command) {
-	textValueKey := command.GetValueFileKey(t.textSetting.Texts)
+func (t *Text) Exec(testKey int, commandKey int) {
+	textValueKey := t.uploadSideFile.Tests[testKey].Commands[commandKey].GetValueTextKey(t.textSetting.Texts)
 	if textValueKey != "" {
 		t.uploadSideFile.Tests[testKey].Commands[commandKey].Value =
-			strings.Replace(command.Value, t.textSetting.GetTemplate(textValueKey), t.textSetting.Texts[textValueKey], -1)
+			strings.Replace(
+				t.uploadSideFile.Tests[testKey].Commands[commandKey].Value,
+				t.textSetting.GetTemplate(textValueKey),
+				t.textSetting.Texts[textValueKey], -1)
 	}
-	textTargetKey := command.GetTargetTextKey(t.textSetting.Texts)
+	textTargetKey := t.uploadSideFile.Tests[testKey].Commands[commandKey].GetTargetTextKey(t.textSetting.Texts)
 	if textTargetKey != "" {
 		t.uploadSideFile.Tests[testKey].Commands[commandKey].Target =
-			strings.Replace(command.Target, t.textSetting.GetTemplate(textTargetKey), t.textSetting.Texts[textTargetKey], -1)
+			strings.Replace(
+				t.uploadSideFile.Tests[testKey].Commands[commandKey].Target,
+				t.textSetting.GetTemplate(textTargetKey),
+				t.textSetting.Texts[textTargetKey], -1)
 	}
 }
 
