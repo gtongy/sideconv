@@ -1,19 +1,24 @@
 package setting
 
+// XpathSetting 変換を行うxpathの設定の構造体
 type XpathSetting struct {
-	Xpaths map[string]string `yaml:"xpaths"`
+	Xpaths Xpaths `yaml:"xpaths"`
 }
 
+// NewXpathSetting 変換を行うxpathの設定の構造体の初期化
 func NewXpathSetting() XpathSetting {
 	return XpathSetting{
 		Xpaths: make(map[string]string),
 	}
 }
 
+// GetTemplate 変換を行う定義のテンプレートの値を取得
+// ファイルの場合は {xpath:VAR_NAME} の形式で入力されたものに対して変換を実行
 func (xs *XpathSetting) GetTemplate(key string) string {
 	return "{xpath:" + key + "}"
 }
 
+// IsAlreadyExists すでにxpathが登録済みかどうかを判定する
 func (xs *XpathSetting) IsAlreadyExists(val string) bool {
 	for _, xpath := range xs.Xpaths {
 		if xpath == val {
@@ -23,4 +28,5 @@ func (xs *XpathSetting) IsAlreadyExists(val string) bool {
 	return false
 }
 
+// Xpaths 設定ファイルに書き込まれたxpathの設定群の構造体
 type Xpaths map[string]string

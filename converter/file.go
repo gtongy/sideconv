@@ -37,7 +37,7 @@ func (f *File) Exec(testKey int, commandKey int, command selenium.Command) {
 	fileKey := command.GetValueFileKey(f.fileSetting.Files)
 	if fileKey != "" {
 		f.uploadSideFile.Tests[testKey].Commands[commandKey].Value =
-			strings.Replace(command.Value, f.fileSetting.GetTemplate(fileKey), f.fileSetting.BaseUrl+"/"+f.fileSetting.Files[fileKey], -1)
+			strings.Replace(command.Value, f.fileSetting.GetTemplate(fileKey), f.fileSetting.BaseURL+"/"+f.fileSetting.Files[fileKey], -1)
 	}
 }
 
