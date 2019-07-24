@@ -11,7 +11,7 @@ If you execute `sideconv c`, convert exec to look at convert setting.
 
 ## Install
 
-`go get github.com/gtongy/sideconv`
+`go get -u github.com/gtongy/sideconv`
 
 ## Author
 
