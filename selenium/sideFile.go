@@ -2,10 +2,9 @@ package selenium
 
 import (
 	"strings"
-
-	"github.com/gtongy/sideconv/setting"
 )
 
+// SideFile .sideファイルの構造体
 type SideFile struct {
 	ID      string `json:"id"`
 	Version string `json:"version"`
@@ -25,12 +24,14 @@ type SideFile struct {
 	Plugins []interface{} `json:"plugins"`
 }
 
+// Test テストケースの構造体
 type Test struct {
 	ID       string    `json:"id"`
 	Name     string    `json:"name"`
 	Commands []Command `json:"commands"`
 }
 
+// Command 各ステップの構造体
 type Command struct {
 	ID      string     `json:"id"`
 	Comment string     `json:"comment"`
@@ -40,7 +41,8 @@ type Command struct {
 	Value   string     `json:"value"`
 }
 
-func (c *Command) GetIdRelative() string {
+// GetIDRelative idRelativeの値
+func (c *Command) GetIDRelative() string {
 	for _, target := range c.Targets {
 		if target[1] == "xpath:idRelative" {
 			return target[0]
@@ -49,7 +51,8 @@ func (c *Command) GetIdRelative() string {
 	return ""
 }
 
-func (c *Command) GetTargetXpathKey(xpaths setting.Xpaths) string {
+// GetTargetXpathKey Target内からXpathの設定のkey名を取得
+func (c *Command) GetTargetXpathKey(xpaths map[string]string) string {
 	for key := range xpaths {
 		if strings.Index(c.Target, key) != -1 {
 			return key
@@ -58,7 +61,8 @@ func (c *Command) GetTargetXpathKey(xpaths setting.Xpaths) string {
 	return ""
 }
 
-func (c *Command) GetValueFileKey(files setting.Files) string {
+// GetValueFileKey Value内からfileの設定のkey名を取得
+func (c *Command) GetValueFileKey(files map[string]string) string {
 	for key := range files {
 		if strings.Index(c.Value, key) != -1 {
 			return key
@@ -67,7 +71,8 @@ func (c *Command) GetValueFileKey(files setting.Files) string {
 	return ""
 }
 
-func (c *Command) GetTargetTextKey(texts setting.Texts) string {
+// GetTargetTextKey Target内からfileの設定のkey名を取得
+func (c *Command) GetTargetTextKey(texts map[string]string) string {
 	for key := range texts {
 		if strings.Index(c.Target, key) != -1 {
 			return key
@@ -76,7 +81,8 @@ func (c *Command) GetTargetTextKey(texts setting.Texts) string {
 	return ""
 }
 
-func (c *Command) GetValueTextKey(texts setting.Texts) string {
+// GetValueTextKey Value内からfileの設定のkey名を取得
+func (c *Command) GetValueTextKey(texts map[string]string) string {
 	for key := range texts {
 		if strings.Index(c.Value, key) != -1 {
 			return key

@@ -2,7 +2,7 @@ package setting
 
 // XpathSetting 変換を行うxpathの設定の構造体
 type XpathSetting struct {
-	Xpaths Xpaths `yaml:"xpaths"`
+	Xpaths map[string]string `yaml:"xpaths"`
 }
 
 // NewXpathSetting 変換を行うxpathの設定の構造体の初期化
@@ -27,6 +27,3 @@ func (xs *XpathSetting) IsAlreadyExists(val string) bool {
 	}
 	return false
 }
-
-// Xpaths 設定ファイルに書き込まれたxpathの設定群の構造体
-type Xpaths map[string]string

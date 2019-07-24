@@ -8,8 +8,8 @@ const (
 
 // FileSetting 変換を行うファイルの設定の構造体
 type FileSetting struct {
-	Files   Files  `yaml:"files"`
-	BaseURL string `yaml:"-"`
+	Files   map[string]string `yaml:"files"`
+	BaseURL string            `yaml:"-"`
 }
 
 // NewFileSetting 変換を行うファイルの設定の構造体の初期化
@@ -26,6 +26,3 @@ func NewFileSetting() FileSetting {
 func (fs *FileSetting) GetTemplate(key string) string {
 	return "{file:" + key + "}"
 }
-
-// Files 設定ファイルに書き込まれたファイルの設定群の構造体
-type Files map[string]string

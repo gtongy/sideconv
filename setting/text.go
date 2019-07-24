@@ -2,7 +2,7 @@ package setting
 
 // TextSetting 変換を行うテキストの設定の構造体
 type TextSetting struct {
-	Texts Texts `yaml:"texts"`
+	Texts map[string]string `yaml:"texts"`
 }
 
 // NewTextSetting 変換を行うテキストの設定の構造体の初期化
@@ -17,6 +17,3 @@ func NewTextSetting() TextSetting {
 func (fs *TextSetting) GetTemplate(key string) string {
 	return "{text:" + key + "}"
 }
-
-// Texts 設定ファイルに書き込まれたテキストの設定群の構造体
-type Texts map[string]string

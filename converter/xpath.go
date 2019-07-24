@@ -40,7 +40,7 @@ func (xp *Xpath) Exec(testKey int, commandKey int, command selenium.Command) {
 	if _, ok := xp.xpathSetting.Xpaths[command.ID]; ok {
 		return
 	}
-	idRelative := command.GetIdRelative()
+	idRelative := command.GetIDRelative()
 	if idRelative == "" || xp.xpathSetting.IsAlreadyExists(idRelative) {
 		return
 	}
