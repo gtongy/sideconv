@@ -50,10 +50,10 @@ func convertExec(filePath string) {
 	fileConverter := converter.NewFile(uploadSideFile)
 	textConverter := converter.NewText(uploadSideFile)
 	for testKey, test := range uploadSideFile.Tests {
-		for commandKey, command := range test.Commands {
-			xpathConverter.Exec(testKey, commandKey, command)
-			fileConverter.Exec(testKey, commandKey, command)
-			textConverter.Exec(testKey, commandKey, command)
+		for commandKey := range test.Commands {
+			xpathConverter.Exec(testKey, commandKey)
+			fileConverter.Exec(testKey, commandKey)
+			textConverter.Exec(testKey, commandKey)
 		}
 	}
 	xpathConverter.After()
