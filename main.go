@@ -1,36 +1,35 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"os"
 
-	"bitbucket.org/hameesys/sidegen/selenium"
+	"github.com/gtongy/sideconv/command"
+	"github.com/urfave/cli"
 )
 
 func main() {
-	var loginSideFile selenium.SideFile
-	loginRaw, err := ioutil.ReadFile("./setup/login.side")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+	app := cli.NewApp()
+	app.Name = "sideconv"
+	app.Usage = "selenium IDE .side file converter"
+	app.Commands = []cli.Command{
+		{
+			Name:    "create-app",
+			Aliases: []string{"ca"},
+			Usage:   "this command create app",
+			Action: func(c *cli.Context) error {
+				command.CreateApp(c)
+				return nil
+			},
+		},
+		{
+			Name:    "convert",
+			Aliases: []string{"c"},
+			Usage:   "convert exec",
+			Action: func(c *cli.Context) error {
+				command.Convert(c)
+				return nil
+			},
+		},
 	}
-	json.Unmarshal(loginRaw, &loginSideFile)
-	var uploadSideFile selenium.SideFile
-	raw, err := ioutil.ReadFile("./sides/uploadReserve.side")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	json.Unmarshal(raw, &uploadSideFile)
-	for i, test := range uploadSideFile.Tests {
-		uploadSideFile.Tests[i].Commands = append(loginSideFile.Tests[0].Commands, test.Commands...)
-	}
-	uploadSideFileBytes, err := json.Marshal(uploadSideFile)
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	ioutil.WriteFile("outputs/uploadReserve.side", uploadSideFileBytes, 0664)
+	app.Run(os.Args)
 }
