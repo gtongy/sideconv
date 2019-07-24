@@ -15,7 +15,7 @@ func main() {
 		{
 			Name:    "create-app",
 			Aliases: []string{"ca"},
-			Usage:   "this command create app",
+			Usage:   "create initial app. please input app name.",
 			Action: func(c *cli.Context) error {
 				command.CreateApp(c)
 				return nil
@@ -24,7 +24,7 @@ func main() {
 		{
 			Name:    "convert",
 			Aliases: []string{"c"},
-			Usage:   "convert exec",
+			Usage:   "convert exec. convert-settings dir input convert settings.",
 			Action: func(c *cli.Context) error {
 				command.Convert(c)
 				return nil
