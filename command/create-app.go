@@ -14,6 +14,7 @@ var (
 	setupFilePaths  = []string{"/convert-settings/xpath.yml", "/convert-settings/file.yml", "/convert-settings/text.yml"}
 )
 
+// CreateApp 初期データの作成コマンド
 func CreateApp(c *cli.Context) {
 	appName := c.Args().Get(0)
 	if appName == "" {
