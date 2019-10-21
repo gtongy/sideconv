@@ -17,3 +17,14 @@ func NewTextSetting() TextSetting {
 func (fs *TextSetting) GetTemplate(key string) string {
 	return "{text:" + key + "}"
 }
+
+// GetByTemplate テンプレート形式の入力からtextを取得する
+func (fs *TextSetting) GetByTemplate(template string) string {
+	for key := range fs.Texts {
+		if t := fs.GetTemplate(key); t == template {
+			return fs.Texts[key]
+		}
+	}
+
+	return ""
+}

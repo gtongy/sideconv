@@ -2,7 +2,7 @@ package converter
 
 import (
 	"io/ioutil"
-	"strings"
+	"path/filepath"
 
 	"github.com/gtongy/sideconv/selenium"
 	"github.com/gtongy/sideconv/setting"
@@ -34,13 +34,10 @@ func NewFile(uploadSideFile *selenium.SideFile) File {
 
 // Exec 処理の実行
 func (f *File) Exec(testKey int, commandKey int) {
-	fileKey := f.uploadSideFile.Tests[testKey].Commands[commandKey].GetValueFileKey(f.fileSetting.Files)
-	if fileKey != "" {
-		f.uploadSideFile.Tests[testKey].Commands[commandKey].Value =
-			strings.Replace(
-				f.uploadSideFile.Tests[testKey].Commands[commandKey].Value,
-				f.fileSetting.GetTemplate(fileKey),
-				f.fileSetting.BaseURL+"/"+f.fileSetting.Files[fileKey], -1)
+	command := &f.uploadSideFile.Tests[testKey].Commands[commandKey]
+
+	if value := f.fileSetting.GetByTemplate(command.Value); value != "" {
+		command.Value = filepath.Join(f.fileSetting.BaseURL, value)
 	}
 }
 

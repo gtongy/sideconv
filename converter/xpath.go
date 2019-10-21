@@ -1,8 +1,8 @@
 package converter
 
 import (
+	"fmt"
 	"io/ioutil"
-	"strings"
 
 	"github.com/gtongy/sideconv/selenium"
 	"github.com/gtongy/sideconv/setting"
@@ -32,22 +32,19 @@ func NewXpath(uploadSideFile *selenium.SideFile) Xpath {
 
 // Exec 処理の実行
 func (xp *Xpath) Exec(testKey int, commandKey int) {
-	xpathKey := xp.uploadSideFile.Tests[testKey].Commands[commandKey].GetTargetXpathKey(xp.xpathSetting.Xpaths)
-	if xpathKey != "" {
-		xp.uploadSideFile.Tests[testKey].Commands[commandKey].Target =
-			strings.Replace(
-				xp.uploadSideFile.Tests[testKey].Commands[commandKey].Target,
-				xp.xpathSetting.GetTemplate(xpathKey),
-				xp.xpathSetting.Xpaths[xpathKey], -1)
+	command := &xp.uploadSideFile.Tests[testKey].Commands[commandKey]
+
+	if xpath := xp.xpathSetting.GetByTemplate(command.Target); xpath != "" {
+		command.Target = fmt.Sprintf("xpath=%s", xpath)
 	}
-	if _, ok := xp.xpathSetting.Xpaths[xp.uploadSideFile.Tests[testKey].Commands[commandKey].ID]; ok {
+	if _, ok := xp.xpathSetting.Xpaths[command.ID]; ok {
 		return
 	}
-	idRelative := xp.uploadSideFile.Tests[testKey].Commands[commandKey].GetIDRelative()
+	idRelative := command.GetIDRelative()
 	if idRelative == "" || xp.xpathSetting.IsAlreadyExists(idRelative) {
 		return
 	}
-	xp.xpathSetting.Xpaths[xp.uploadSideFile.Tests[testKey].Commands[commandKey].ID] = idRelative
+	xp.xpathSetting.Xpaths[command.ID] = idRelative
 }
 
 // After 実行後処理の記述

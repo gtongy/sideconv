@@ -26,3 +26,14 @@ func NewFileSetting() FileSetting {
 func (fs *FileSetting) GetTemplate(key string) string {
 	return "{file:" + key + "}"
 }
+
+// GetByTemplate テンプレート形式の入力からxpathを取得する
+func (fs *FileSetting) GetByTemplate(template string) string {
+	for key := range fs.Files {
+		if t := fs.GetTemplate(key); t == template {
+			return fs.Files[key]
+		}
+	}
+
+	return ""
+}
