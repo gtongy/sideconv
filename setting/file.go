@@ -21,16 +21,16 @@ func NewFileSetting() FileSetting {
 	}
 }
 
-// GetTemplate 変換を行う定義のテンプレートの値を取得
+// getTemplate 変換を行う定義のテンプレートの値を取得
 // ファイルの場合は {file:VAR_NAME} の形式で入力されたものに対して変換を実行
-func (fs *FileSetting) GetTemplate(key string) string {
+func (fs *FileSetting) getTemplate(key string) string {
 	return "{file:" + key + "}"
 }
 
-// GetByTemplate テンプレート形式の入力からxpathを取得する
+// GetByTemplate テンプレート形式の入力からfileを取得する
 func (fs *FileSetting) GetByTemplate(template string) string {
 	for key := range fs.Files {
-		if t := fs.GetTemplate(key); t == template {
+		if t := fs.getTemplate(key); t == template {
 			return fs.Files[key]
 		}
 	}

@@ -12,16 +12,16 @@ func NewTextSetting() TextSetting {
 	}
 }
 
-// GetTemplate 変換を行う定義のテンプレートの値を取得
+// getTemplate 変換を行う定義のテンプレートの値を取得
 // ファイルの場合は {text:VAR_NAME} の形式で入力されたものに対して変換を実行
-func (fs *TextSetting) GetTemplate(key string) string {
+func (fs *TextSetting) getTemplate(key string) string {
 	return "{text:" + key + "}"
 }
 
 // GetByTemplate テンプレート形式の入力からtextを取得する
 func (fs *TextSetting) GetByTemplate(template string) string {
 	for key := range fs.Texts {
-		if t := fs.GetTemplate(key); t == template {
+		if t := fs.getTemplate(key); t == template {
 			return fs.Texts[key]
 		}
 	}

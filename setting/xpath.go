@@ -15,7 +15,7 @@ func NewXpathSetting() XpathSetting {
 // GetByTemplate テンプレート形式の入力からxpathを取得する
 func (xs *XpathSetting) GetByTemplate(template string) string {
 	for key := range xs.Xpaths {
-		if t := xs.GetTemplate(key); t == template {
+		if t := xs.getTemplate(key); t == template {
 			return xs.Xpaths[key]
 		}
 	}
@@ -23,9 +23,9 @@ func (xs *XpathSetting) GetByTemplate(template string) string {
 	return ""
 }
 
-// GetTemplate 変換を行う定義のテンプレートの値を取得
+// getTemplate 変換を行う定義のテンプレートの値を取得
 // ファイルの場合は {xpath:VAR_NAME} の形式で入力されたものに対して変換を実行
-func (xs *XpathSetting) GetTemplate(key string) string {
+func (xs *XpathSetting) getTemplate(key string) string {
 	return "{xpath:" + key + "}"
 }
 
