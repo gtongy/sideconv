@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -35,7 +36,7 @@ func (xp *Xpath) Exec(testKey int, commandKey int) {
 	command := &xp.uploadSideFile.Tests[testKey].Commands[commandKey]
 
 	for template, xpath := range xp.xpathSetting.GetTemplates(command.Target) {
-		command.Target = strings.Replace(command.Target, template, xpath, 1)
+		command.Target = strings.Replace(command.Target, template, fmt.Sprintf("xpath=%s", xpath), 1)
 	}
 	if _, ok := xp.xpathSetting.Xpaths[command.ID]; ok {
 		return
