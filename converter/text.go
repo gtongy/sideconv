@@ -2,6 +2,7 @@ package converter
 
 import (
 	"io/ioutil"
+	"strings"
 
 	"github.com/gtongy/sideconv/selenium"
 	"github.com/gtongy/sideconv/setting"
@@ -33,11 +34,12 @@ func NewText(uploadSideFile *selenium.SideFile) Text {
 func (t *Text) Exec(testKey int, commandKey int) {
 	command := &t.uploadSideFile.Tests[testKey].Commands[commandKey]
 
-	if value := t.textSetting.GetByTemplate(command.Value); value != "" {
-		command.Value = value
+	for template, text := range t.textSetting.GetTemplates(command.Value) {
+		command.Value = strings.Replace(command.Value, template, text, -1)
 	}
-	if target := t.textSetting.GetByTemplate(command.Target); target != "" {
-		command.Target = target
+
+	for template, text := range t.textSetting.GetTemplates(command.Target) {
+		command.Target = strings.Replace(command.Target, template, text, -1)
 	}
 }
 

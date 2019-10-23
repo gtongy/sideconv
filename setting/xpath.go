@@ -1,5 +1,9 @@
 package setting
 
+import (
+	"strings"
+)
+
 // XpathSetting 変換を行うxpathの設定の構造体
 type XpathSetting struct {
 	Xpaths map[string]string `yaml:"xpaths"`
@@ -12,15 +16,18 @@ func NewXpathSetting() XpathSetting {
 	}
 }
 
-// GetByTemplate テンプレート形式の入力からxpathを取得する
-func (xs *XpathSetting) GetByTemplate(template string) string {
+// GetTemplates テンプレート形式が含まれた入力からfileを取得する
+func (xs *XpathSetting) GetTemplates(s string) map[string]string {
+	templates := make(map[string]string)
+
 	for key := range xs.Xpaths {
-		if t := xs.getTemplate(key); t == template {
-			return xs.Xpaths[key]
+		template := xs.getTemplate(key)
+		if strings.Contains(s, template) {
+			templates[template] = xs.Xpaths[key]
 		}
 	}
 
-	return ""
+	return templates
 }
 
 // getTemplate 変換を行う定義のテンプレートの値を取得

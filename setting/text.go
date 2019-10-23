@@ -1,5 +1,7 @@
 package setting
 
+import "strings"
+
 // TextSetting 変換を行うテキストの設定の構造体
 type TextSetting struct {
 	Texts map[string]string `yaml:"texts"`
@@ -14,17 +16,20 @@ func NewTextSetting() TextSetting {
 
 // getTemplate 変換を行う定義のテンプレートの値を取得
 // ファイルの場合は {text:VAR_NAME} の形式で入力されたものに対して変換を実行
-func (fs *TextSetting) getTemplate(key string) string {
+func (ts *TextSetting) getTemplate(key string) string {
 	return "{text:" + key + "}"
 }
 
-// GetByTemplate テンプレート形式の入力からtextを取得する
-func (fs *TextSetting) GetByTemplate(template string) string {
-	for key := range fs.Texts {
-		if t := fs.getTemplate(key); t == template {
-			return fs.Texts[key]
+// GetTemplates テンプレート形式が含まれた入力からfileを取得する
+func (ts *TextSetting) GetTemplates(s string) map[string]string {
+	templates := make(map[string]string)
+
+	for key := range ts.Texts {
+		template := ts.getTemplate(key)
+		if strings.Contains(s, template) {
+			templates[template] = ts.Texts[key]
 		}
 	}
 
-	return ""
+	return templates
 }

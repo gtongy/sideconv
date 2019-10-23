@@ -1,8 +1,8 @@
 package converter
 
 import (
-	"fmt"
 	"io/ioutil"
+	"strings"
 
 	"github.com/gtongy/sideconv/selenium"
 	"github.com/gtongy/sideconv/setting"
@@ -34,8 +34,8 @@ func NewXpath(uploadSideFile *selenium.SideFile) Xpath {
 func (xp *Xpath) Exec(testKey int, commandKey int) {
 	command := &xp.uploadSideFile.Tests[testKey].Commands[commandKey]
 
-	if xpath := xp.xpathSetting.GetByTemplate(command.Target); xpath != "" {
-		command.Target = fmt.Sprintf("xpath=%s", xpath)
+	for template, xpath := range xp.xpathSetting.GetTemplates(command.Target) {
+		command.Target = strings.Replace(command.Target, template, xpath, 1)
 	}
 	if _, ok := xp.xpathSetting.Xpaths[command.ID]; ok {
 		return
