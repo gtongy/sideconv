@@ -41,11 +41,6 @@ func (xp *Xpath) Exec(testKey int, commandKey int) {
 	if _, ok := xp.xpathSetting.Xpaths[command.ID]; ok {
 		return
 	}
-	idRelative := command.GetIDRelative()
-	if idRelative == "" || xp.xpathSetting.IsAlreadyExists(idRelative) {
-		return
-	}
-	xp.xpathSetting.Xpaths[command.ID] = idRelative
 }
 
 // After 実行後処理の記述
