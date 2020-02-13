@@ -32,21 +32,14 @@ func NewText(uploadSideFile *selenium.SideFile) Text {
 
 // Exec 処理の実行
 func (t *Text) Exec(testKey int, commandKey int) {
-	textValueKey := t.uploadSideFile.Tests[testKey].Commands[commandKey].GetValueTextKey(t.textSetting.Texts)
-	if textValueKey != "" {
-		t.uploadSideFile.Tests[testKey].Commands[commandKey].Value =
-			strings.Replace(
-				t.uploadSideFile.Tests[testKey].Commands[commandKey].Value,
-				t.textSetting.GetTemplate(textValueKey),
-				t.textSetting.Texts[textValueKey], -1)
+	command := &t.uploadSideFile.Tests[testKey].Commands[commandKey]
+
+	for template, text := range t.textSetting.GetTemplates(command.Value) {
+		command.Value = strings.Replace(command.Value, template, text, -1)
 	}
-	textTargetKey := t.uploadSideFile.Tests[testKey].Commands[commandKey].GetTargetTextKey(t.textSetting.Texts)
-	if textTargetKey != "" {
-		t.uploadSideFile.Tests[testKey].Commands[commandKey].Target =
-			strings.Replace(
-				t.uploadSideFile.Tests[testKey].Commands[commandKey].Target,
-				t.textSetting.GetTemplate(textTargetKey),
-				t.textSetting.Texts[textTargetKey], -1)
+
+	for template, text := range t.textSetting.GetTemplates(command.Target) {
+		command.Target = strings.Replace(command.Target, template, text, -1)
 	}
 }
 

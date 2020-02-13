@@ -1,6 +1,9 @@
 package setting
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 const (
 	filesDirPath = "/files"
@@ -21,8 +24,22 @@ func NewFileSetting() FileSetting {
 	}
 }
 
-// GetTemplate 変換を行う定義のテンプレートの値を取得
+// getTemplate 変換を行う定義のテンプレートの値を取得
 // ファイルの場合は {file:VAR_NAME} の形式で入力されたものに対して変換を実行
-func (fs *FileSetting) GetTemplate(key string) string {
+func (fs *FileSetting) getTemplate(key string) string {
 	return "{file:" + key + "}"
+}
+
+// GetTemplates テンプレート形式が含まれた入力からfileを取得する
+func (fs *FileSetting) GetTemplates(s string) map[string]string {
+	templates := make(map[string]string)
+
+	for key := range fs.Files {
+		template := fs.getTemplate(key)
+		if strings.Contains(s, template) {
+			templates[template] = fs.Files[key]
+		}
+	}
+
+	return templates
 }

@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -32,22 +33,14 @@ func NewXpath(uploadSideFile *selenium.SideFile) Xpath {
 
 // Exec 処理の実行
 func (xp *Xpath) Exec(testKey int, commandKey int) {
-	xpathKey := xp.uploadSideFile.Tests[testKey].Commands[commandKey].GetTargetXpathKey(xp.xpathSetting.Xpaths)
-	if xpathKey != "" {
-		xp.uploadSideFile.Tests[testKey].Commands[commandKey].Target =
-			strings.Replace(
-				xp.uploadSideFile.Tests[testKey].Commands[commandKey].Target,
-				xp.xpathSetting.GetTemplate(xpathKey),
-				xp.xpathSetting.Xpaths[xpathKey], -1)
+	command := &xp.uploadSideFile.Tests[testKey].Commands[commandKey]
+
+	for template, xpath := range xp.xpathSetting.GetTemplates(command.Target) {
+		command.Target = strings.Replace(command.Target, template, fmt.Sprintf("xpath=%s", xpath), 1)
 	}
-	if _, ok := xp.xpathSetting.Xpaths[xp.uploadSideFile.Tests[testKey].Commands[commandKey].ID]; ok {
+	if _, ok := xp.xpathSetting.Xpaths[command.ID]; ok {
 		return
 	}
-	idRelative := xp.uploadSideFile.Tests[testKey].Commands[commandKey].GetIDRelative()
-	if idRelative == "" || xp.xpathSetting.IsAlreadyExists(idRelative) {
-		return
-	}
-	xp.xpathSetting.Xpaths[xp.uploadSideFile.Tests[testKey].Commands[commandKey].ID] = idRelative
 }
 
 // After 実行後処理の記述

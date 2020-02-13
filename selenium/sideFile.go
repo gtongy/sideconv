@@ -1,9 +1,5 @@
 package selenium
 
-import (
-	"strings"
-)
-
 // SideFile .sideファイルの構造体
 type SideFile struct {
 	ID      string `json:"id"`
@@ -46,46 +42,6 @@ func (c *Command) GetIDRelative() string {
 	for _, target := range c.Targets {
 		if target[1] == "xpath:idRelative" {
 			return target[0]
-		}
-	}
-	return ""
-}
-
-// GetTargetXpathKey Target内からXpathの設定のkey名を取得
-func (c *Command) GetTargetXpathKey(xpaths map[string]string) string {
-	for key := range xpaths {
-		if strings.Index(c.Target, key) != -1 {
-			return key
-		}
-	}
-	return ""
-}
-
-// GetValueFileKey Value内からfileの設定のkey名を取得
-func (c *Command) GetValueFileKey(files map[string]string) string {
-	for key := range files {
-		if strings.Index(c.Value, key) != -1 {
-			return key
-		}
-	}
-	return ""
-}
-
-// GetTargetTextKey Target内からfileの設定のkey名を取得
-func (c *Command) GetTargetTextKey(texts map[string]string) string {
-	for key := range texts {
-		if strings.Index(c.Target, key) != -1 {
-			return key
-		}
-	}
-	return ""
-}
-
-// GetValueTextKey Value内からfileの設定のkey名を取得
-func (c *Command) GetValueTextKey(texts map[string]string) string {
-	for key := range texts {
-		if strings.Index(c.Value, key) != -1 {
-			return key
 		}
 	}
 	return ""
